@@ -20,7 +20,8 @@ class CrudController extends Controller implements CrudControllerContract
 {
     use DispatchesJobs, ValidatesRequests;
 
-    public $crud;
+    //public $crud;
+
     public $data = [];
 
     public function __construct()
@@ -44,7 +45,7 @@ class CrudController extends Controller implements CrudControllerContract
 
     public function initializeCrud($request, $operation = null)
     {
-        $this->crud = Backpack::crud($this)->setRequest($request);
+        Backpack::crud($this)->setRequest($request);
         $this->setupDefaults();
         $this->setup();
         $this->setupConfigurationForCurrentOperation($operation);
@@ -127,4 +128,14 @@ class CrudController extends Controller implements CrudControllerContract
             $this->{$setupClassName}();
         }
     }
+
+    public function __get($name)
+    {
+        if ($name == 'crud') {
+            return Backpack::getControllerCrud(get_class($this));
+        }
+
+        return $this->{$name};
+    }
+
 }
